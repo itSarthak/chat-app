@@ -8,13 +8,24 @@ const [selectedImage, setSelectedImage] = React.useState(null);
 const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    // const reader = new FileReader();
+    // const fileName = file.name;
+    // reader.readAsDataURL(file);
+    // reader.onload = async () => {
+    //     const base64Image = reader.result;
+    //     setSelectedImage(base64Image);
+    //     await updateProfile({  name: fileName , file: base64Image});
+    // };
     const reader = new FileReader();
     reader.readAsDataURL(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("name", file.name)
     reader.onload = async () => {
         const base64Image = reader.result;
         setSelectedImage(base64Image);
-        await updateProfile({ profilePic: base64Image });
-    };
+        await updateProfile(formData)
+    }
 }
   return (
     <div className='h-screen pt-20'>
