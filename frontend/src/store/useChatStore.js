@@ -1,9 +1,8 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import { axiosInstance } from '../lib/axios';
-import { send } from 'vite';
 
-export const useChatStore = create((set,get) => ({
+export const useChatStore = create((set, get) => ({
     messages: [],
     users: [],
     selectedUser: null,
@@ -11,39 +10,39 @@ export const useChatStore = create((set,get) => ({
     isMessagesLoading: false,
 
 
-    getUsers: async() => {
-        set({isUsersLoading: true});
+    getUsers: async () => {
+        set({ isUsersLoading: true });
         try {
             const res = await axiosInstance.get('/messages/users');
-            set({users: res.data});
+            set({ users: res.data });
         } catch (error) {
             toast.error(error.response.data.message);
         } finally {
-            set({isUsersLoading: false});
+            set({ isUsersLoading: false });
         }
     },
-    getMessages: async(userId) => {
-        set({isMessagesLoading: true});
+    getMessages: async (userId) => {
+        set({ isMessagesLoading: true });
         try {
             const res = await axiosInstance.get(`/messages/${userId}`);
-            set({messages: res.data});
+            set({ messages: res.data });
         } catch (error) {
             toast.error(error.response.data.message);
         } finally {
-            set({isMessagesLoading: false});
+            set({ isMessagesLoading: false });
         }
     },
 
     sendMessage: async (messageData) => {
-        const {selectedUser, messages} = get();
+        const { selectedUser, messages } = get();
         try {
-            const res= await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
-            set({messages: [...messages, res.data]});
+            const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+            set({ messages: [...messages, res.data] });
         }
-        catch {
+        catch (error) {
             toast.error(error.response.data.message);
         }
     },
     // todo:optimise this one later
-    setSelectedUser: (user) => set({selectedUser: user}),
+    setSelectedUser: (user) => set({ selectedUser: user }),
 }));
