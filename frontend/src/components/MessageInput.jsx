@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 const MessageInput = () => {
     const [text, setText] = useState('');
     const [imagePreview, setImagePreview] = useState(null);
+    const [multipartFile, setMultipartFile] = useState(null)
     const fileInputRef = React.useRef(null);
     const { sendMessage } = useChatStore();
     const hanldeImageChange = (e) => {
@@ -17,6 +18,7 @@ const MessageInput = () => {
      }
      const reader = new FileReader();
      reader.onloadend = () => {
+        setMultipartFile(file)
         setImagePreview(reader.result);
      };
      reader.readAsDataURL(file);
@@ -24,6 +26,7 @@ const MessageInput = () => {
 
     const removeImage = () => {
         setImagePreview(null);
+        setMultipartFile(null)
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
@@ -37,7 +40,7 @@ const MessageInput = () => {
         try {
             await sendMessage({
                 text: text.trim(),
-                image: imagePreview,
+                image: multipartFile,
             });
             //clear form
             setText('');
