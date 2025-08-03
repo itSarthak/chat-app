@@ -43,6 +43,7 @@ const handleImageUpload = async (e) => {
                         src={selectedImage || authUser?.profilePic || "/avatar.jpg"}
                         alt='Profile' 
                         className='size-32 rounded-full object-cover border-4'
+                        style={{"image-rendering":"high-quality"}}
                     />
                     <label
                     htmlFor='avatar-upload'
