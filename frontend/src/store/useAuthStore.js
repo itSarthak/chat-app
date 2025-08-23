@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { axiosInstance } from '../lib/axios';
 import toast from 'react-hot-toast';
-import {io} from "socket.io-client";
+import { io } from "socket.io-client";
 
-const BASE_URL ="http://localhost:5001"
+const BASE_URL = "http://localhost:8091"
 
-export const useAuthStore = create((set,get) => ({
+export const useAuthStore = create((set, get) => ({
     authUser: null,
     isSigningUp: false,
     isLoggingIn: false,
@@ -73,7 +73,7 @@ export const useAuthStore = create((set,get) => ({
     updateProfile: async (data) => {
         set({ isUpdatingProfile: true });
         try {
-            const res = await axiosInstance.put('/profile/update/avatar',data);
+            const res = await axiosInstance.put('/profile/update/avatar', data);
             set({ authUser: res.data });
             toast.success('Profile updated successfully!');
         }
@@ -87,24 +87,24 @@ export const useAuthStore = create((set,get) => ({
         }
     },
     connectSocket: () => {
-        const {authUser} = get()
-        if(!authUser || get().socket?.connected)
+        const { authUser } = get()
+        if (!authUser || get().socket?.connected)
             return;
-        const socket =io(BASE_URL, {
+        const socket = io(BASE_URL, {
             query: {
                 userId: authUser._id,
             }
         })
         socket.connect()
 
-        set({socket:socket});
+        set({ socket: socket });
 
         socket.on("getOnlineUsers", (userIds) => {
-            set({ onlineUsers: userIds})
+            set({ onlineUsers: userIds })
         })
     },
     disconnectSocket: () => {
-        if(get().socket?.connected)
+        if (get().socket?.connected)
             get().socket.disconnect()
     },
 
