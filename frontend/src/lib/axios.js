@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8090/api',
+  baseURL: 'https://www.chatbackend.space/api/api',
   withCredentials: true,
 });
