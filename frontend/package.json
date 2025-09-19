@@ -12,7 +12,11 @@
   "dependencies": {
     "axios": "^1.10.0",
     "dotenv": "^17.2.1",
+    "events": "^3.3.0",
     "lucide-react": "^0.525.0",
+    "pouchdb": "^9.0.0",
+    "pouchdb-browser": "^9.0.0",
+    "pouchdb-find": "^9.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
