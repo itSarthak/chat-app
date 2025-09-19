@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useChatStore } from '../store/useChatStore';
 import { Image, Send, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Logger from '../utils/logger';
 
 
 const MessageInput = () => {
@@ -12,16 +13,16 @@ const MessageInput = () => {
     const { sendMessage } = useChatStore();
     const hanldeImageChange = (e) => {
         const file = e.target.files[0];
-       if(!file.type.startsWith('image/')) {
-        toast.error("Please upload a valid image file.");
-        return;
-     }
-     const reader = new FileReader();
-     reader.onloadend = () => {
-        setMultipartFile(file)
-        setImagePreview(reader.result);
-     };
-     reader.readAsDataURL(file);
+        if (!file.type.startsWith('image/')) {
+            toast.error("Please upload a valid image file.");
+            return;
+        }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setMultipartFile(file)
+            setImagePreview(reader.result);
+        };
+        reader.readAsDataURL(file);
     }
 
     const removeImage = () => {
@@ -37,22 +38,30 @@ const MessageInput = () => {
         if (!text.trim() && !imagePreview) {
             return;
         }
+        let tempText = text;
+        let tempImagePreview = imagePreview;
+        let tempMultipartFile = multipartFile;
         try {
-            await sendMessage({
-                text: text.trim(),
-                image: multipartFile,
-            });
-            //clear form
             setText('');
             setImagePreview(null);
-            if(fileInputRef.current) {
+            setMultipartFile(null);
+            await sendMessage({
+                text: tempText.trim(),
+                image: tempMultipartFile,
+            });
+            //clear form
+
+            if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
         }
-        catch(error) {
-            console.error("Failed to send message: ", error);
+        catch (error) {
+            setText(tempText);
+            setImagePreview(tempImagePreview);
+            setMultipartFile(tempMultipartFile);
+            Logger.error("Failed to send message: ", error);
         }
-     }
+    }
 
 
     return (
