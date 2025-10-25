@@ -38,19 +38,22 @@ const MessageInput = () => {
         if (!text.trim() && !imagePreview) {
             return;
         }
+        // Sending messages as form data: x-www-form-urlencoded
+        const formData = new FormData();
+        if (null !== multipartFile) {
+            formData.append("file", multipartFile);
+        }
+        formData.append("text", text.trim());
         let tempText = text;
         let tempImagePreview = imagePreview;
         let tempMultipartFile = multipartFile;
         try {
+            // Clear the input field and image preview immediately
             setText('');
             setImagePreview(null);
             setMultipartFile(null);
-            await sendMessage({
-                text: tempText.trim(),
-                image: tempMultipartFile,
-            });
+            await sendMessage(formData);
             //clear form
-
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
